@@ -2,7 +2,7 @@
 while 
   echo "--------------------------------------------------------------------------------"
   echo "Files modified - remaking $(date)"
-	make test 
+	make all 
   inotifywait -qqre modify .
 do
   :
