@@ -11,3 +11,7 @@ using namespace std;
 
 double cosine(cv::Point p1, cv::Point center, cv::Point p2);
 void findSquares(const UMat& image, vector<vector<Point>>& squares); 
+UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs);
+void drawSquares(UMat& _image, const vector<vector<Point>>& squares);
+
+int entry(int argc, char** argv);

@@ -9,6 +9,7 @@ using namespace cv;
 
 int thresh = 50;
 int N = 11;
+const char* wndname = "Square Detection Demo";
 
 /**
    Find the cosine between three Points.
@@ -66,4 +67,74 @@ void findSquares(const UMat& image, vector<vector<Point>>& squares) {
       }
     }
   }
+}
+
+/**
+   Draw outlines on squares in image
+*/
+void drawSquares(UMat& _image, const vector<vector<Point>>& squares) {
+  Mat image = _image.getMat(ACCESS_WRITE);
+  for(size_t i = 0; i < squares.size(); i++)
+    {
+      const Point* p = &squares[i][0];
+      int n = (int) squares[i].size();
+      polylines(image, &p, &n, 1, true, Scalar(0,255,0), 3, LINE_AA);
+    }
+}
+
+/**
+   Draw squares on a single image
+*/
+UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs) {
+  UMat imgToShow(Size(image.cols, image.rows), image.type());
+  image.copyTo(imgToShow);
+  drawSquares(imgToShow, sqs);
+  return imgToShow;
+}
+
+int entry(int argc, char** argv) {
+    const char* keys =
+      "{ i input    | ./images/square3.jpg       | specify input image }"
+      "{ o output   | ./images/square3output.jpg | specify output save path}"
+      "{ s shape    | square                     | specify shape }"
+      "{ c color    | red                        | specify color }"
+      "{ h help     |                            | print help message }";
+    CommandLineParser cmd(argc, argv, keys);
+    if(cmd.has("help")) {
+        cout << "Usage : " << argv[0] << " [options]" << endl;
+        cout << "Available options:" << endl;
+        cmd.printMessage();
+        return EXIT_SUCCESS;
+    }
+    string inputName = cmd.get<string>("i");
+    string outfile = cmd.get<string>("o");
+    int iterations = 10;
+    namedWindow(wndname, WINDOW_AUTOSIZE);
+    vector<vector<Point> > squares;
+    UMat image;
+    imread(inputName, 1).copyTo(image);
+    if( image.empty() ) {
+        cout << "Couldn't load " << inputName << endl;
+        cmd.printMessage();
+        return EXIT_FAILURE;
+    }
+    int j = iterations;
+    int64 t_cpp = 0;
+    //warm-ups
+    cout << "warming up ..." << endl;
+    findSquares(image, squares);
+    do {
+        int64 t_start = getTickCount();
+        findSquares(image, squares);
+        t_cpp += cv::getTickCount() - t_start;
+        t_start  = getTickCount();
+        cout << "run loop: " << j << endl;
+    }
+    while(--j);
+    cout << "average time: " << 1000.0f * (double)t_cpp / getTickFrequency() / iterations << "ms" << endl;
+    UMat result = drawSquaresBoth(image, squares);
+    imshow(wndname, result);
+    imwrite(outfile, result);
+    waitKey(0);
+    return EXIT_SUCCESS;
 }
