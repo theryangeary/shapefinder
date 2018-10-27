@@ -3,7 +3,7 @@ CC = g++
 CFLAGS = `pkg-config opencv --cflags --libs`
 SRC = shapefinder.c
 OBJS = $(SRC:.c=.o)
-all: shapefinder test main
+all: test main
 
 main: main.o $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS)
