@@ -1,3 +1,4 @@
+SHELL = /bin/bash
 CC = g++
 CFLAGS = `pkg-config opencv --cflags --libs`
 SRC = shapefinder.c
@@ -14,6 +15,9 @@ test: test.o $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS)
 	./test
 	echo "Tests passed"
+
+daemon:
+	./continuous-make.sh
 
 clean:
 	rm test main *.o
