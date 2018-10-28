@@ -91,31 +91,13 @@ UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs) {
   return imgToShow;
 }
 
-int entry(int argc, char** argv) {
-    const char* keys =
-      "{ i input    | ./images/square3.jpg       | specify input image }"
-      "{ o output   | ./images/square3output.jpg | specify output save path}"
-      "{ s shape    | square                     | specify shape }"
-      "{ c color    | red                        | specify color }"
-      "{ h help     |                            | print help message }";
-    CommandLineParser cmd(argc, argv, keys);
-    if(cmd.has("help")) {
-        cout << "Usage : " << argv[0] << " [options]" << endl;
-        cout << "Available options:" << endl;
-        cmd.printMessage();
-        return EXIT_SUCCESS;
-    }
-    string inputName = cmd.get<string>("i");
-    string outfile = cmd.get<string>("o");
-    string color = cmd.get<string>("c");
-    string shape = cmd.get<string>("s");
+int entry(string inputName, string outfile, string color, string shape) {
     int iterations = 10;
     vector<vector<Point> > squares;
     UMat image;
     imread(inputName, 1).copyTo(image);
     if( image.empty() ) {
         cout << "Couldn't load " << inputName << endl;
-        cmd.printMessage();
         return EXIT_FAILURE;
     }
     int j = iterations;
