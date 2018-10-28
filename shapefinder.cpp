@@ -9,7 +9,6 @@ using namespace cv;
 
 int thresh = 50;
 int N = 11;
-const char* wndname = "Square Detection Demo";
 
 /**
    Find the cosine between three Points.
@@ -109,7 +108,6 @@ int entry(int argc, char** argv) {
     string inputName = cmd.get<string>("i");
     string outfile = cmd.get<string>("o");
     int iterations = 10;
-    namedWindow(wndname, WINDOW_AUTOSIZE);
     vector<vector<Point> > squares;
     UMat image;
     imread(inputName, 1).copyTo(image);
@@ -133,7 +131,6 @@ int entry(int argc, char** argv) {
     while(--j);
     cout << "average time: " << 1000.0f * (double)t_cpp / getTickFrequency() / iterations << "ms" << endl;
     UMat result = drawSquaresBoth(image, squares);
-    imshow(wndname, result);
     imwrite(outfile, result);
     waitKey(0);
     return EXIT_SUCCESS;
