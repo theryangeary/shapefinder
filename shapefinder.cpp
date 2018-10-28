@@ -107,6 +107,8 @@ int entry(int argc, char** argv) {
     }
     string inputName = cmd.get<string>("i");
     string outfile = cmd.get<string>("o");
+    string color = cmd.get<string>("c");
+    string shape = cmd.get<string>("s");
     int iterations = 10;
     vector<vector<Point> > squares;
     UMat image;
