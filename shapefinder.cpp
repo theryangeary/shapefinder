@@ -103,18 +103,14 @@ int entry(string inputName, string outfile, string color, string shape) {
     }
     int j = iterations;
     int64 t_cpp = 0;
-    //warm-ups
-    cout << "warming up ..." << endl;
     findSquares(image, squares);
     do {
         int64 t_start = getTickCount();
         findSquares(image, squares);
         t_cpp += cv::getTickCount() - t_start;
         t_start  = getTickCount();
-        cout << "run loop: " << j << endl;
     }
     while(--j);
-    cout << "average time: " << 1000.0f * (double)t_cpp / getTickFrequency() / iterations << "ms" << endl;
     UMat result = drawSquaresBoth(image, squares);
     try {
       imwrite(outfile, result);
