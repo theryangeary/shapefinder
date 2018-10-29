@@ -72,24 +72,28 @@ void findSquares(const UMat& image, vector<vector<Point>>& squares) {
 /**
    Draw outlines on squares in image
 */
-void drawSquares(UMat& _image, const vector<vector<Point>>& squares) {
+void drawSquares(UMat& _image, const vector<vector<Point>>& squares, Scalar color) {
   Mat image = _image.getMat(ACCESS_WRITE);
   for(size_t i = 0; i < squares.size(); i++)
     {
       const Point* p = &squares[i][0];
       int n = (int) squares[i].size();
-      polylines(image, &p, &n, 1, true, Scalar(0,255,0), 3, LINE_AA);
+      polylines(image, &p, &n, 1, true, color, 3, LINE_AA);
     }
 }
 
 /**
    Draw squares on a single image
 */
-UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs) {
+UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar color) {
   UMat imgToShow(Size(image.cols, image.rows), image.type());
   image.copyTo(imgToShow);
-  drawSquares(imgToShow, sqs);
+  drawSquares(imgToShow, sqs, color);
   return imgToShow;
+}
+
+Scalar getColorFromColorMap(string color) {
+  return colorMap[color];
 }
 
 int entry(string inputName, string outfile, string color, string shape) {
@@ -111,7 +115,8 @@ int entry(string inputName, string outfile, string color, string shape) {
         t_start  = getTickCount();
     }
     while(--j);
-    UMat result = drawSquaresBoth(image, squares);
+    Scalar drawColor = colorMap[color];
+    UMat result = drawSquaresBoth(image, squares, drawColor);
     try {
       imwrite(outfile, result);
     }

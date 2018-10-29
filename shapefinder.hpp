@@ -11,7 +11,8 @@ using namespace std;
 
 double cosine(cv::Point p1, cv::Point center, cv::Point p2);
 void findSquares(const UMat& image, vector<vector<Point>>& squares);
-UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs);
-void drawSquares(UMat& _image, const vector<vector<Point>>& squares);
+UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar color);
+void drawSquares(UMat& _image, const vector<vector<Point>>& squares, Scalar color);
+Scalar getColorFromColorMap(string color);
 
 int entry(string inputName, string outfile, string color, string shape);
