@@ -6,7 +6,6 @@
 #define GREEN Scalar(0,255,0)
 #define BLUE  Scalar(0,0,255)
 
-
 std::map<std::string, cv::Scalar> colorMap = {
   {"red", cv::RED},
   {"green", cv::GREEN},
