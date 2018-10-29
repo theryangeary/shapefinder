@@ -8,7 +8,10 @@ void cosineTest(Point p1, Point p2, Point c, double expResult) {
 }
 
 void colorTest(string color, cv::Scalar result) {
-  assert(getColorFromColorMap(color) == result);
+  Scalar colorResult = *getColorFromColorMap(color);
+  assert((colorResult)[0] == result[0] &&
+         (colorResult)[1] == result[1] &&
+         (colorResult)[2] == result[2]);
 }
 
 int main() {
@@ -17,8 +20,8 @@ int main() {
   Point center(0, 0);
   cosineTest(p1, p1, center, 1);
   cosineTest(p1, p2, center, 0.0);
-  colorTest("red", Scalar(255, 0, 0));
+  colorTest("blue", Scalar(255, 0, 0));
   colorTest("green", Scalar(0, 255, 0));
-  colorTest("blue", BLUE);
+  colorTest("red", Scalar(0, 0, 255));
   return 0;
 }
