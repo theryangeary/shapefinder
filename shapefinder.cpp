@@ -92,8 +92,11 @@ UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar
   return imgToShow;
 }
 
-Scalar getColorFromColorMap(string color) {
-  return colorMap[color];
+/**
+   Getter for colorMap
+*/
+Scalar* getColorFromColorMap(string color) {
+  return &colorMap[color];
 }
 
 int entry(string inputName, string outfile, string color, string shape) {
