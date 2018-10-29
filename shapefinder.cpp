@@ -6,6 +6,7 @@
 #include "opencv2/highgui.hpp"
 using namespace cv;
 #include "shapefinder.hpp"
+#include "colors.hpp"
 
 int thresh = 50;
 int N = 11;
