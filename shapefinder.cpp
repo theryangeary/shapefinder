@@ -122,6 +122,5 @@ int entry(string inputName, string outfile, string color, string shape) {
       string outfileWithExtension = outfile + ".png";
       imwrite(outfileWithExtension, result);
     }
-    waitKey(0);
     return EXIT_SUCCESS;
 }
