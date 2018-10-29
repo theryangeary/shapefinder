@@ -1,8 +1,10 @@
 #!/bin/sh
-while 
+while
   echo "--------------------------------------------------------------------------------"
-  echo "Files modified - remaking $(date)"
-	make all 
+  date
+  echo "Files modified - remaking"
+	make all
+  flawfinder main
   inotifywait -qqre modify .
 do
   :
