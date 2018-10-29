@@ -2,7 +2,7 @@ SHELL = /bin/bash
 CC = g++
 CFLAGS = `pkg-config opencv --cflags --libs`
 SRC = shapefinder.c
-OBJS = $(SRC:.c=.o)
+OBJS = colors.hpp $(SRC:.c=.o)
 all: test main
 
 main: main.o $(OBJS)
