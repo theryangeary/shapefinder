@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
       i++;
     }
     else {
-      inputFile = argv[i]; 
+      inputFile = argv[i];
     }
   }
   cout << inputFile << endl << outfile << endl << shape << endl << color << endl;

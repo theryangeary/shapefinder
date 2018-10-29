@@ -115,8 +115,8 @@ int entry(string inputName, string outfile, string color, string shape) {
         t_start  = getTickCount();
     }
     while(--j);
-    Scalar drawColor = colorMap[color];
-    UMat result = drawSquaresBoth(image, squares, drawColor);
+    Scalar* drawColor = getColorFromColorMap(color);
+    UMat result = drawSquaresBoth(image, squares, *drawColor);
     try {
       imwrite(outfile, result);
     }
