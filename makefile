@@ -16,6 +16,9 @@ test: test.o $(OBJS)
 	./test
 	echo "Tests passed"
 
+tags:
+	make all CC=cc_args.py
+
 daemon:
 	./continuous-make.sh
 
