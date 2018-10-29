@@ -96,7 +96,7 @@ int entry(string inputName, string outfile, string color, string shape) {
     vector<vector<Point> > squares;
     UMat image;
     imread(inputName, 1).copyTo(image);
-    if( image.empty() ) {
+    if(image.empty()) {
         cout << "Couldn't load " << inputName << endl;
         return EXIT_FAILURE;
     }
@@ -115,7 +115,13 @@ int entry(string inputName, string outfile, string color, string shape) {
     while(--j);
     cout << "average time: " << 1000.0f * (double)t_cpp / getTickFrequency() / iterations << "ms" << endl;
     UMat result = drawSquaresBoth(image, squares);
-    imwrite(outfile, result);
+    try {
+      imwrite(outfile, result);
+    }
+    catch (cv::Exception e) {
+      string outfileWithExtension = outfile + ".png";
+      imwrite(outfileWithExtension, result);
+    }
     waitKey(0);
     return EXIT_SUCCESS;
 }
