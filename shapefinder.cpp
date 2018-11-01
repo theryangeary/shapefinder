@@ -96,7 +96,25 @@ UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar
    Getter for colorMap
 */
 Scalar* getColorFromColorMap(string color) {
-  return &colorMap[color];
+  Scalar* result = &colorMap[color];
+  if (color != "black" &&
+      (*(result))[0] == 0 &&
+      (*(result))[1] == 0 &&
+      (*(result))[2] == 0) {
+    // Handle hex color
+    try{
+      assert(color.size() == 7);
+      int r = stoi(color.substr(1, 2), 0, 16);
+      int g = stoi(color.substr(3, 2), 0, 16);
+      int b = stoi(color.substr(5, 2), 0, 16);
+      result = new Scalar(b, g, r);
+      return result;
+    }
+    catch (invalid_argument e) {
+      cout << "Invalid color. Proceeding using default" << endl;
+    }
+  }
+  return result;
 }
 
 int entry(string inputName, string outfile, string color, string shape) {
