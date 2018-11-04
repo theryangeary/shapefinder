@@ -23,7 +23,10 @@ int main(int argc, char** argv) {
       inputFile = argv[i];
     }
   }
-  cout << inputFile << endl << outfile << endl << shape << endl << color << endl;
+  cout << "Input: " << inputFile << endl;
+  cout << "Output: " << outfile << endl;
+  cout << "Shape: " << shape << endl;
+  cout << "Color: " << color << endl;
   entry(inputFile, outfile, color, shape);
   return 0;
 }
