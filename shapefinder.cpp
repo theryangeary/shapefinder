@@ -7,6 +7,7 @@
 using namespace cv;
 #include "shapefinder.hpp"
 #include "colors.hpp"
+#include "shapes.hpp"
 
 int thresh = 50;
 int N = 11;
@@ -25,7 +26,22 @@ double cosine(Point pt1, Point pt2, Point pt0) {
 /**
    Find squares in image
 */
-void findSquares(const UMat& image, vector<vector<Point>>& squares) {
+void findPolygon(const UMat& image, vector<vector<Point>>& squares, int shape) {
+  int numSides;
+  float cosineResult;
+  if (shape == TRIANGLE) {
+    numSides = 3;
+    cosineResult = 0.5;
+  }
+  else if (shape == RECTANGLE){
+    numSides = 4;
+    cosineResult = 0.3;
+  }
+  else if (shape == SQUARE){
+    numSides = 4;
+    cosineResult = 0.3;
+  }
+
   squares.clear();
   UMat pyr, time, gray0(image.size(), CV_8U), gray;
 
@@ -54,25 +70,25 @@ void findSquares(const UMat& image, vector<vector<Point>>& squares) {
       for(size_t i = 0; i < contours.size(); i++) {
         approxPolyDP(contours[i], approx, arcLength(contours[i], true)*0.02, true);
 
-        if(approx.size() == 4 && fabs(contourArea(approx)) > 1000 && isContourConvex(approx)) {
-            double maxCosine = 0;
-            for(int j = 2; j < 5; j++) {
-              double cosineResult = fabs(cosine(approx[j%4], approx[j-2], approx[j-1]));
-              maxCosine = MAX(maxCosine, cosineResult);
-            }
-            if(maxCosine < 0.3) {
-              squares.push_back(approx);
-            }
+        if(approx.size() == numSides && fabs(contourArea(approx)) > 1000 && isContourConvex(approx)) {
+          double maxCosine = 0;
+          for(int j = 2; j < 5; j++) {
+            double cosineResult = fabs(cosine(approx[j%4], approx[j-2], approx[j-1]));
+            maxCosine = MAX(maxCosine, cosineResult);
           }
+          if(maxCosine < cosineResult) {
+            squares.push_back(approx);
+          }
+        }
       }
     }
   }
 }
 
 /**
-   Draw outlines on squares in image
+   Draw outlines on polygons in image
 */
-void drawSquares(UMat& _image, const vector<vector<Point>>& squares, Scalar color) {
+void drawPolygon(UMat& _image, const vector<vector<Point>>& squares, Scalar color) {
   Mat image = _image.getMat(ACCESS_WRITE);
   for(size_t i = 0; i < squares.size(); i++)
     {
@@ -83,12 +99,12 @@ void drawSquares(UMat& _image, const vector<vector<Point>>& squares, Scalar colo
 }
 
 /**
-   Draw squares on a single image
+   Draw polygons on a single image
 */
-UMat drawSquaresBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar color) {
+UMat drawPolygonBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar color) {
   UMat imgToShow(Size(image.cols, image.rows), image.type());
   image.copyTo(imgToShow);
-  drawSquares(imgToShow, sqs, color);
+  drawPolygon(imgToShow, sqs, color);
   return imgToShow;
 }
 
@@ -118,32 +134,33 @@ Scalar* getColorFromColorMap(string color) {
 }
 
 int entry(string inputName, string outfile, string color, string shape) {
-    int iterations = 10;
-    vector<vector<Point> > squares;
-    UMat image;
-    imread(inputName, 1).copyTo(image);
-    if(image.empty()) {
-        cout << "Couldn't load " << inputName << endl;
-        return EXIT_FAILURE;
-    }
-    int j = iterations;
-    int64 t_cpp = 0;
-    findSquares(image, squares);
-    do {
-        int64 t_start = getTickCount();
-        findSquares(image, squares);
-        t_cpp += cv::getTickCount() - t_start;
-        t_start  = getTickCount();
-    }
-    while(--j);
-    Scalar* drawColor = getColorFromColorMap(color);
-    UMat result = drawSquaresBoth(image, squares, *drawColor);
-    try {
-      imwrite(outfile, result);
-    }
-    catch (cv::Exception e) {
-      string outfileWithExtension = outfile + ".png";
-      imwrite(outfileWithExtension, result);
-    }
-    return EXIT_SUCCESS;
+  int shapeNum = getShape(shape);
+  int iterations = 10;
+  vector<vector<Point>> squares;
+  UMat image;
+  imread(inputName, 1).copyTo(image);
+  if(image.empty()) {
+    cout << "Couldn't load " << inputName << endl;
+    return EXIT_FAILURE;
+  }
+  int j = iterations;
+  int64 t_cpp = 0;
+  findPolygon(image, squares, shapeNum);
+  do {
+    int64 t_start = getTickCount();
+    findPolygon(image, squares, shapeNum);
+    t_cpp += cv::getTickCount() - t_start;
+    t_start  = getTickCount();
+  }
+  while(--j);
+  Scalar* drawColor = getColorFromColorMap(color);
+  UMat result = drawPolygonBoth(image, squares, *drawColor);
+  try {
+    imwrite(outfile, result);
+  }
+  catch (cv::Exception e) {
+    string outfileWithExtension = outfile + ".png";
+    imwrite(outfileWithExtension, result);
+  }
+  return EXIT_SUCCESS;
 }
