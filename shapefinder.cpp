@@ -119,7 +119,6 @@ Scalar* getColorFromColorMap(string color) {
       (*(result))[2] == 0) {
     // Handle hex color
     try{
-      assert(color.size() == 7);
       int r = stoi(color.substr(1, 2), 0, 16);
       int g = stoi(color.substr(3, 2), 0, 16);
       int b = stoi(color.substr(5, 2), 0, 16);
