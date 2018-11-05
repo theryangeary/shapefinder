@@ -26,7 +26,7 @@ double cosine(Point pt1, Point pt2, Point pt0) {
 /**
    Find squares in image
 */
-void findPolygon(const UMat& image, vector<vector<Point>>& squares, int shape) {
+void findPolygon(const UMat& image, vector<vector<Point> >& squares, int shape) {
   int numSides;
   float cosineResult;
   if (shape == TRIANGLE) {
@@ -47,7 +47,7 @@ void findPolygon(const UMat& image, vector<vector<Point>>& squares, int shape) {
 
   pyrDown(image, pyr, Size(image.cols/2, image.rows/2));
   pyrUp(pyr, time, image.size());
-  vector<vector<Point>> contours;
+  vector<vector<Point> > contours;
 
   // loop through R,G,B
   for(int c = 0; c < 3; c++) {
@@ -88,7 +88,7 @@ void findPolygon(const UMat& image, vector<vector<Point>>& squares, int shape) {
 /**
    Draw outlines on polygons in image
 */
-void drawPolygon(UMat& _image, const vector<vector<Point>>& squares, Scalar color) {
+void drawPolygon(UMat& _image, const vector<vector<Point> >& squares, Scalar color) {
   Mat image = _image.getMat(ACCESS_WRITE);
   for(size_t i = 0; i < squares.size(); i++)
     {
@@ -101,7 +101,7 @@ void drawPolygon(UMat& _image, const vector<vector<Point>>& squares, Scalar colo
 /**
    Draw polygons on a single image
 */
-UMat drawPolygonBoth(const UMat& image, const vector<vector<Point>>& sqs, Scalar color) {
+UMat drawPolygonBoth(const UMat& image, const vector<vector<Point> >& sqs, Scalar color) {
   UMat imgToShow(Size(image.cols, image.rows), image.type());
   image.copyTo(imgToShow);
   drawPolygon(imgToShow, sqs, color);
@@ -135,7 +135,7 @@ Scalar* getColorFromColorMap(string color) {
 int entry(string inputName, string outfile, string color, string shape) {
   int shapeNum = getShape(shape);
   int iterations = 10;
-  vector<vector<Point>> squares;
+  vector<vector<Point> > squares;
   UMat image;
   imread(inputName, 1).copyTo(image);
   if(image.empty()) {
